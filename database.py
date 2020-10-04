@@ -43,13 +43,17 @@ class Database:
 
                     if len(self.titles) == self.n_lines_max:
                         break
+                break
 
     def _append(self, title, date, url):
+        """Append found ad information to output lists that will build
+        dataframe.
+        """
 
         print(title, date, url)
         self.titles.append(title)
         self.dates.append(date)
-        self.urls.append(title)
+        self.urls.append(url)
         print(len(self.titles))
 
     @property
@@ -62,6 +66,7 @@ class Database:
 
 
 def extract_ad(ad_link, month_url):
+    """Get ad information from ad link."""
 
     title, date, ad_url = None, None, None
 
