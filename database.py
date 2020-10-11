@@ -43,7 +43,8 @@ class Database:
 
                     if len(self.titles) == self.n_lines_max:
                         break
-                break
+                if len(self.titles) == self.n_lines_max:
+                    break
 
     def _append(self, title, date, url):
         """Append found ad information to output lists that will build
@@ -62,7 +63,7 @@ class Database:
                             columns=['title', 'date', 'url'])
 
     def to_csv(self, path):
-        self.df.to_csv(self.path)
+        self.df.to_csv(path)
 
 
 def extract_ad(ad_link, month_url):
@@ -80,6 +81,10 @@ def extract_ad(ad_link, month_url):
             ad_url, verify=False).text, "lxml")
 
         title = ad_soup.find('h1').get_text()
+
+        split_str = '[Met-jobs] '
+        if  split_str in title:
+            title = title.split(split_str)[1]
 
         dates = [a.get_text() for a in ad_soup.select(
             'tr td') if a.get_text().count(':') == 2]
