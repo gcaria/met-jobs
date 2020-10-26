@@ -1,17 +1,15 @@
-from colorama import init
-from colorama import Fore as f
-init(autoreset=True)
+bcolors = {
+    'header' : '\033[95m',
+    'blue' : '\033[34m',
+    'cyan' : '\033[96m',
+    'green' : '\033[92m',
+    'warning' : '\033[93m',
+    'fail' : '\033[91m',
+    'endc' : '\033[0m',
+    'bold' : '\033[1m',
+    'underline' : '\033[4m',
+    }
 
-dict_color = {
-    'red': f.RED,
-    'blue': f.BLUE,
-    'green': f.GREEN,
-    'yellow': f.YELLOW,
-    'magenta': f.MAGENTA,
-    'cyan': f.CYAN
-}
-
-
-def printc(text, color='red', end='\n'):
-    print(dict_color[color] + str(text), end=end)
+def printc(string, color):
+    print(f"{bcolors[color]}{string}{bcolors['endc']}")
 
