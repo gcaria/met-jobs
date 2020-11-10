@@ -4,8 +4,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 import argparse
 from style import printc
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-q', '--query', required=True,
+parser = argparse.ArgumentParser(description='Search in the met-jobs ads.')
+parser.add_argument('query', metavar='QUERY', type=str,
                     help='String for search query')
 parser.add_argument('-d', '--database', default='data/database.csv',
                     help='Database for search query')
