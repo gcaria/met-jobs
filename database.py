@@ -1,10 +1,12 @@
 """Tools to build database for search engine."""
+import ssl
+from datetime import datetime
 from urllib.parse import urljoin
-from requests import get
+
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup as bs
-import ssl
-import pandas as pd
+from requests import get
 
 ssl._create_default_https_context = ssl._create_unverified_context
 requests.packages.urllib3.disable_warnings()
@@ -51,11 +53,10 @@ class Database:
         dataframe.
         """
 
-        print(title, date, url)
         self.titles.append(title)
         self.dates.append(date)
         self.urls.append(url)
-        print(len(self.titles))
+        print(f'{len(self.titles)} -- {title} -- {date} -- {url}')
 
     @property
     def df(self):
@@ -90,6 +91,12 @@ def extract_ad(ad_link, month_url):
             'tr td') if a.get_text().count(':') == 2]
 
         if dates:
-            date = dates[0]
+            date = dates[0][5:15] # Only take "DD MMM YYYY"
+            try:
+                date = datetime.strptime(date, '%d %b %Y')
+            except ValueError:
+                return None, None, None
+
+
 
     return title, date, ad_url
