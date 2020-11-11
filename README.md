@@ -1,6 +1,6 @@
 # met-jobs
 Searches through the jobs advertised until 01/10/2020 via the [Met-jobs mailing list](https://www.lists.rdg.ac.uk/mailman/listinfo/met-jobs) and
-return the most appropriate results.
+display the most appropriate results.
 
 ## Installation
 Simply clone this git repository:
