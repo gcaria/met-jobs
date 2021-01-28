@@ -1,6 +1,6 @@
 import argparse
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -29,9 +29,11 @@ def format_times(args):
 
     start, end = None, None
     if args.start:
-        start = datetime.strptime(args.start, '%d-%m-%Y')
+        start = datetime.strptime(
+            args.start, '%d-%m-%Y').replace(tzinfo=timezone.utc)
     if args.end:
-        end = datetime.strptime(args.end, '%d-%m-%Y')
+        end = datetime.strptime(
+            args.end, '%d-%m-%Y').replace(tzinfo=timezone.utc)
     return start, end
 
 
