@@ -2,6 +2,7 @@
 import ssl
 from datetime import datetime
 from urllib.parse import urljoin
+import dateutil.parser as dparser
 
 import pandas as pd
 import requests
@@ -91,12 +92,6 @@ def extract_ad(ad_link, month_url):
             'tr td') if a.get_text().count(':') == 2]
 
         if dates:
-            date = dates[0][5:15] # Only take "DD MMM YYYY"
-            try:
-                date = datetime.strptime(date, '%d %b %Y')
-            except ValueError:
-                return None, None, None
-
-
+            date = dparser.parse(dates[0])
 
     return title, date, ad_url
