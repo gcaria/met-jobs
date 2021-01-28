@@ -9,7 +9,7 @@ git clone https://github.com/gcaria/met-jobs.git
 ```
 and install all packages specified in the `requirements.txt` file.
 
-The code can only be run with Python 3.
+The code has only been tested with Python 3.
 
 ## Usage
 To search a particular string in the database of Met-jobs ads, use:
