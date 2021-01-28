@@ -7,7 +7,7 @@ Simply clone this git repository:
 ```
 git clone https://github.com/gcaria/met-jobs.git
 ```
-and install all packages specified in the `requirements.txt` file.
+and install the packages (simply `pandas`, `sklearn` and their respective dependencies) specified in the `requirements.txt` file.
 Additional packages are required should you wish to create a new database for the queries.
 
 The code has only been tested with Python 3.

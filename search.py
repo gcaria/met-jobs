@@ -57,11 +57,15 @@ df = sel_time(df, start, end)
 
 if args.by == 'best':
     df.reset_index(inplace=True, drop=True)
+    # Get the "term frequency–inverse document frequency" statistics
+    # i.e weights the word counts by how many titles contain that word
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(df['title'])
     query_vec = vectorizer.transform([args.query])
+
     results = cosine_similarity(X, query_vec).reshape((-1,))
     first_results = results.argsort()[-args.n_results:][::-1]
+
 elif args.by in ['newest', 'oldest']:
     df = df[df['title'].str.contains(args.query, case=False)]
     is_ascending = bool(args.by == 'oldest')
