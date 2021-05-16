@@ -34,11 +34,11 @@ class Database:
             if month_href and 'date' in month_href:
 
                 month_url = urljoin(URL_ROOT, month_href)
-                monthSoup = bs(get(month_url, verify=False).text,
+                month_soup = bs(get(month_url, verify=False).text,
                                "lxml")
 
                 # for each link in a month page
-                for ad_link in monthSoup.findAll('a'):
+                for ad_link in month_soup.findAll('a'):
 
                     title, date, ad_url = extract_ad(ad_link, month_url)
                     if title:
@@ -69,7 +69,7 @@ class Database:
 
 
 def extract_ad(ad_link, month_url):
-    """Get ad information from ad link."""
+    """Get job ad information from job ad link."""
 
     title, date, ad_url = None, None, None
 
@@ -85,7 +85,7 @@ def extract_ad(ad_link, month_url):
         title = ad_soup.find('h1').get_text()
 
         split_str = '[Met-jobs] '
-        if  split_str in title:
+        if split_str in title:
             title = title.split(split_str)[1]
 
         dates = [a.get_text() for a in ad_soup.select(
