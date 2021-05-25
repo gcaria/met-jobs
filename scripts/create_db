@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+from met_jobs.database import Database
+import argparse
+
+parser = argparse.ArgumentParser(description='Search in the met-jobs ads.')
+parser.add_argument('path_out', metavar='PATH_OUT', type=str,
+                    help='The output path for the database')
+parser.add_argument('-n', '--n_lines_max', default=None, type=int,
+                    help='Number of results displayed')
+parser.add_argument('-verbose', action='store_true', 
+help='Print retrieve results as they are found')
+args = parser.parse_args()
+
+db = Database(args.n_lines_max, args.verbose)
+db.to_csv(args.path_out)
