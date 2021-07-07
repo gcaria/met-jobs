@@ -15,7 +15,7 @@ The code has only been tested with Python 3.
 ## Usage
 To search a particular string (e.g. "mesoscale") in the database of Met-jobs ads, use:
 ```
-python search.py "mesoscale" -n 5
+search_met "mesoscale" -n 5
 ```
 where in this case we have limited the output to the 5 most relevant results (see below about query options).
 
@@ -43,5 +43,5 @@ your browser.
 
 To discover all available self-explanatory arguments run:
 ```
-python search.py --help
+search_met --help
 ```

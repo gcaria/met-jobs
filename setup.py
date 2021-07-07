@@ -8,4 +8,6 @@ setup(
     author="Giacomo Caria",
     author_email="giacomo.caria@gmail.com",
     packages=["met_jobs"],
+    scripts=['scripts/search_met'],
+
 )
