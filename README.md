@@ -39,7 +39,7 @@ https://www.lists.rdg.ac.uk/archives/met-jobs/2012-11/msg00001.html
 ```
 
 On a Mac you can simply just use `cmd`+`click` on the ad's URL to open it in
-your browser.
+your browser, or if you are on Linux just use `ctrl`+`click`
 
 To discover all available self-explanatory arguments run:
 ```
