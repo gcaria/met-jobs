@@ -1,26 +1,38 @@
 #!/usr/bin/env python
 
-import os
 import argparse
+import os
+
 from met_jobs.search import Search
 
 dirname = os.path.dirname(__file__)
-PATH_DEFAULT = os.path.join(dirname, '../data/database.csv')
+PATH_DEFAULT = os.path.join(dirname, "../data/database.csv")
 
-parser = argparse.ArgumentParser(description='Search in the met-jobs ads.')
-parser.add_argument('query', metavar='QUERY', type=str,
-                    help='String for search query')
-parser.add_argument('-d', '--database', default=PATH_DEFAULT, type=str,
-                    help='Path of database used for search query')
-parser.add_argument('-n', '--n_results', default=10, type=int,
-                    help='Number of results displayed')
-parser.add_argument('-s', '--start', type=str,
-                    help='Start date for search (format : DD-MM-YYYY)')
-parser.add_argument('-e', '--end', type=str,
-                    help='End date for search (format : DD-MM-YYYY)')
-parser.add_argument('--by', type=str, default='best',
-                    choices=['best', 'newest', 'oldest'],
-                    help='Criterium for order of results')
+parser = argparse.ArgumentParser(description="Search in the met-jobs ads.")
+parser.add_argument("query", metavar="QUERY", type=str, help="String for search query")
+parser.add_argument(
+    "-d",
+    "--database",
+    default=PATH_DEFAULT,
+    type=str,
+    help="Path of database used for search query",
+)
+parser.add_argument(
+    "-n", "--n_results", default=10, type=int, help="Number of results displayed"
+)
+parser.add_argument(
+    "-s", "--start", type=str, help="Start date for search (format : DD-MM-YYYY)"
+)
+parser.add_argument(
+    "-e", "--end", type=str, help="End date for search (format : DD-MM-YYYY)"
+)
+parser.add_argument(
+    "--by",
+    type=str,
+    default="best",
+    choices=["best", "newest", "oldest"],
+    help="Criterium for order of results",
+)
 args = parser.parse_args()
 
 
@@ -28,9 +40,9 @@ search = Search(args.query, args.database, args.start, args.end, args.by)
 
 for i_count, idx in enumerate(search.first_results):
 
-    print('-'*70)
-    i_title = search.df.loc[idx, 'title']
-    i_date = search.df.loc[idx, 'date'].strftime('%d-%m-%Y')
-    i_url = search.df.loc[idx, 'url']
-    print(f'{i_count+1}) {i_title} - {i_date}')
-    print(f'{i_url}')
+    print("-" * 70)
+    i_title = search.df.loc[idx, "title"]
+    i_date = search.df.loc[idx, "date"].strftime("%d-%m-%Y")
+    i_url = search.df.loc[idx, "url"]
+    print(f"{i_count+1}) {i_title} - {i_date}")
+    print(f"{i_url}")

@@ -1,10 +1,10 @@
 """Tools to query database."""
 from datetime import datetime, timezone
+from functools import cached_property
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from functools import cached_property
 
 
 class Search:
@@ -60,7 +60,7 @@ class Search:
             self.df.sort_values(
                 by="date", inplace=True, ascending=is_ascending, ignore_index=True
             )
-            n_results = min(args.n_results, len(self.df))
+            n_results = min(self.n_results, len(self.df))
             return range(n_results)
         else:
             raise ValueError('Invalid "by" argument')

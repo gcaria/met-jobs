@@ -1,9 +1,8 @@
 """Tools to build database for search engine."""
 import ssl
-from datetime import datetime
 from urllib.parse import urljoin
-import dateutil.parser as dparser
 
+import dateutil.parser as dparser
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup as bs
