@@ -1,6 +1,9 @@
-__pycache__
-*.pyc
-
-# Packages
+# general things to ignore
+build/
+dist/
+*.egg-info/
 *.egg
-*.egg-info
+*.py[cod]
+__pycache__/
+*.so
+*~
