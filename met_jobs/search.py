@@ -1,4 +1,5 @@
 """Tools to query database."""
+import os
 from datetime import datetime, timezone
 from functools import cached_property
 
@@ -6,13 +7,17 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+dirname = os.path.dirname(__file__)
+PATH_DEFAULT = f"{dirname}/database.csv"
+
 
 class Search:
     def __init__(
         self, query, path_db=None, start=None, end=None, by="best", n_results=10
     ):
+
         self.query = query
-        self.path_db = path_db
+        self.path_db = path_db if path_db else PATH_DEFAULT
         self.start, self.end = self._format_times(start, end)
         self.by = by
         self.n_results = n_results

@@ -1,21 +1,16 @@
 #!/usr/bin/env python
 
 import argparse
-import os
 
 from met_jobs.search import Search
-
-dirname = os.path.dirname(__file__)
-PATH_DEFAULT = os.path.join(dirname, "../data/database.csv")
 
 parser = argparse.ArgumentParser(description="Search in the met-jobs ads.")
 parser.add_argument("query", metavar="QUERY", type=str, help="String for search query")
 parser.add_argument(
     "-d",
     "--database",
-    default=PATH_DEFAULT,
     type=str,
-    help="Path of database used for search query",
+    help="Path of database used for search query (default is built-in database)",
 )
 parser.add_argument(
     "-n", "--n_results", default=10, type=int, help="Number of results displayed"

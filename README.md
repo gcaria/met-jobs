@@ -3,14 +3,12 @@ Searches through the jobs advertised until 27/01/2021 via the [Met-jobs mailing 
 display the most appropriate results.
 
 ## Installation
-Simply clone this git repository:
+Simply pip it:
 ```
-git clone https://github.com/gcaria/met-jobs.git
+pip install met-jobs
 ```
-and install the packages (simply `pandas`, `sklearn` and their respective dependencies) specified in the `requirements.txt` file.
-Additional packages are required should you wish to create a new database for the queries.
 
-The code has only been tested with Python 3.
+The code has only been tested with Python 3.8.
 
 ## Usage
 To search a particular string (e.g. "mesoscale") in the database of Met-jobs ads, use:
