@@ -1,0 +1,11 @@
+include pyproject.toml
+
+# Include the README
+include *.md
+
+include LICENSE
+
+include setup.py
+
+# Include the data files
+include met_jobs/database.csv
