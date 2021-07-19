@@ -12,7 +12,10 @@ parser.add_argument(
     "-n", "--n_lines_max", default=None, type=int, help="Number of results displayed"
 )
 parser.add_argument(
-    "-verbose", action="store_true", help="Print retrieve results as they are found"
+    "-v",
+    "--verbose",
+    action="store_true",
+    help="Print retrieved results in real-time as they are found",
 )
 args = parser.parse_args()
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-
 import argparse
+import math
+import re
 
 from met_jobs.search import Search
 
@@ -31,13 +32,37 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-search = Search(args.query, args.database, args.start, args.end, args.by)
+search = Search(
+    args.query, args.database, args.start, args.end, args.by, args.n_results
+)
 
-for i_count, idx in enumerate(search.first_results):
 
-    print("-" * 70)
-    i_title = search.df.loc[idx, "title"]
-    i_date = search.df.loc[idx, "date"].strftime("%d-%m-%Y")
-    i_url = search.df.loc[idx, "url"]
-    print(f"{i_count+1}) {i_title} - {i_date}")
-    print(f"{i_url}")
+def format_title(index, title_str):
+    """Edit title string to have a uniform format for display."""
+
+    title_str = re.sub(r"[\n\t\s+]", " ", title_str)
+
+    # Make sure all prints have the same length
+    if len(title_str) > 75:
+        title_str = title_str[:75]
+        title_str = title_str[:-3] + "..."
+    else:
+        title_str = f"{title_str:<75}"
+
+    # Compensate for variable length of index
+    sep = " " * (3 - math.floor(math.log10(index)))
+
+    return sep + title_str
+
+
+for i_count, idx_df in enumerate(search.first_results):
+    if i_count:
+        print("\n")
+    title = search.df.loc[idx_df, "title"]
+    date = search.df.loc[idx_df, "date"].strftime("%d-%m-%Y")
+    url = search.df.loc[idx_df, "url"]
+
+    title_fmt = format_title(i_count + 1, title)
+
+    print(f"{i_count+1}){title_fmt} - {date}")
+    print(f"{url}")
