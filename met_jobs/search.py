@@ -12,6 +12,10 @@ PATH_DEFAULT = f"{dirname}/database.csv"
 
 
 class Search:
+    """Perform search and prepare dataframe results for display, using
+    provided input.
+    """
+
     def __init__(
         self, query, path_db=None, start=None, end=None, by="best", n_results=10
     ):
@@ -21,6 +25,7 @@ class Search:
         self.start, self.end = self._format_times(start, end)
         self.by = by
         self.n_results = n_results
+        self.df = None
 
         if self.start and self.end and self.start > self.end:
             raise ValueError("Start date can not be after end date!")
@@ -42,14 +47,16 @@ class Search:
         return df
 
     @cached_property
-    def df(self):
+    def _df(self):
         df = pd.read_csv(self.path_db, parse_dates=["date"])
         return self._sel_time_interval(df, self.start, self.end)
 
     @property
     def first_results(self):
+        """Indexes of dataframe rows to be displayed as search results"""
+
         if self.by == "best":
-            self.df.reset_index(inplace=True, drop=True)
+            self.df = self._df.reset_index(drop=True)
             # Get the "term frequency–inverse document frequency" statistics
             # i.e weights the word counts by how many titles contain that word
             vectorizer = TfidfVectorizer()
@@ -60,12 +67,14 @@ class Search:
             return results.argsort()[-self.n_results :][::-1]
 
         elif self.by in ["newest", "oldest"]:
-            self.df = self.df[self.df["title"].str.contains(self.query, case=False)]
-            is_ascending = bool(self.by == "oldest")
-            self.df.sort_values(
-                by="date", inplace=True, ascending=is_ascending, ignore_index=True
+            self.df = self._df[self._df["title"].str.contains(self.query, case=False)]
+            is_ascending = self.by == "oldest"
+            self.df = self.df.sort_values(
+                by="date", ascending=is_ascending, ignore_index=True
             )
             n_results = min(self.n_results, len(self.df))
             return range(n_results)
         else:
-            raise ValueError('Invalid "by" argument')
+            raise ValueError(
+                'Invalid "by" argument, choose between {best, newest, oldest}'
+            )
