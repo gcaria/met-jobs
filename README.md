@@ -1,5 +1,5 @@
 # met-jobs
-Searches through the jobs advertised until 27/01/2021 via the [Met-jobs mailing list](https://www.lists.rdg.ac.uk/mailman/listinfo/met-jobs) and
+Searches through the jobs advertised from January 2011 until July 2021 (around 12,000 entries) via the [Met-jobs mailing list](https://www.lists.rdg.ac.uk/mailman/listinfo/met-jobs) and
 display the most appropriate results.
 
 ## Installation
