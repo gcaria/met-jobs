@@ -1,9 +1,9 @@
 """Tools to query database."""
 import os
-from datetime import datetime, timezone
 from functools import cached_property
 
 import pandas as pd
+from dateutil import parser
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -25,7 +25,9 @@ class Search:
         self.start, self.end = self._format_times(start, end)
         self.by = by
         self.n_results = n_results
-        self.df = None
+
+        if not os.path.exists(self.path_db):
+            raise FileNotFoundError(f"Database not found at: {self.path_db}")
 
         if self.start and self.end and self.start > self.end:
             raise ValueError("Start date can not be after end date!")
@@ -33,9 +35,9 @@ class Search:
     def _format_times(self, start, end):
 
         if start is not None:
-            start = datetime.strptime(start, "%d-%m-%Y").replace(tzinfo=timezone.utc)
+            start = parser.parse(start)
         if end is not None:
-            end = datetime.strptime(end, "%d-%m-%Y").replace(tzinfo=timezone.utc)
+            end = parser.parse(end)
         return start, end
 
     def _sel_time_interval(self, df, t_start, t_end):
@@ -47,16 +49,35 @@ class Search:
         return df
 
     @cached_property
-    def _df(self):
-        df = pd.read_csv(self.path_db, parse_dates=["date"])
-        return self._sel_time_interval(df, self.start, self.end)
+    def df(self):
+
+        df = pd.read_csv(self.path_db, parse_dates=["date"], infer_datetime_format=True)
+        # For non-standard datetime parsing, we use pd.to_datetime after pd.read_csv
+        df["date"] = pd.to_datetime(df["date"], utc=True)
+        # Remove information about timezone, since we do not need
+        # to know time with this level of precision
+        df["date"] = df["date"].dt.tz_convert(None)
+        df = self._sel_time_interval(df, self.start, self.end)
+
+        if self.by == "best":
+            df = df.reset_index(drop=True)
+        elif self.by in ["newest", "oldest"]:
+            df = df[df["title"].str.contains(self.query, case=False)]
+            is_ascending = self.by == "oldest"
+            df.sort_values(
+                inplace=True, by="date", ascending=is_ascending, ignore_index=True
+            )
+        else:
+            raise ValueError(
+                'Invalid "by" argument, choose between {best, newest, oldest}'
+            )
+        return df
 
     @property
     def first_results(self):
         """Indexes of dataframe rows to be displayed as search results"""
 
         if self.by == "best":
-            self.df = self._df.reset_index(drop=True)
             # Get the "term frequency–inverse document frequency" statistics
             # i.e weights the word counts by how many titles contain that word
             vectorizer = TfidfVectorizer()
@@ -65,16 +86,6 @@ class Search:
 
             results = cosine_similarity(X, query_vec).reshape((-1,))
             return results.argsort()[-self.n_results :][::-1]
-
-        elif self.by in ["newest", "oldest"]:
-            self.df = self._df[self._df["title"].str.contains(self.query, case=False)]
-            is_ascending = self.by == "oldest"
-            self.df = self.df.sort_values(
-                by="date", ascending=is_ascending, ignore_index=True
-            )
+        else:
             n_results = min(self.n_results, len(self.df))
             return range(n_results)
-        else:
-            raise ValueError(
-                'Invalid "by" argument, choose between {best, newest, oldest}'
-            )
