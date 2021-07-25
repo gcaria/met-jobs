@@ -13,7 +13,12 @@ requests.packages.urllib3.disable_warnings()
 
 URL_ROOT = "https://www.lists.rdg.ac.uk/archives/met-jobs/"
 
-soup = bs(get(URL_ROOT, verify=False).text, "lxml")
+
+def soup_from_url(url):
+    return bs(get(url, verify=False).text, "lxml")
+
+
+soup_website = soup_from_url(URL_ROOT)
 
 
 class Database:
@@ -28,32 +33,36 @@ class Database:
 
     def _loop(self):
 
-        for month_link in soup.findAll("a"):
+        for month_link in soup_website.findAll("a"):
             month_href = month_link.get("href")
 
             if month_href and "date" in month_href:
 
                 month_url = urljoin(URL_ROOT, month_href)
-                month_soup = bs(get(month_url, verify=False).text, "lxml")
+                month_soup = soup_from_url(month_url)
 
-                # Loop on all the links in a month page
-                for ad_link in month_soup.findAll("a"):
-
-                    title, date, ad_url = extract_ad(ad_link, month_url)
-                    if title:
-                        self._append(title, date, ad_url)
-
-                    if self._is_max_len:
-                        break
+                self._loop_on_month(month_url, month_soup)
                 if self._is_max_len:
                     break
+
+    def _loop_on_month(self, month_url, month_soup):
+        """Loop on all the links in a month page."""
+
+        for ad_link in month_soup.findAll("a"):
+
+            title, date, ad_url = self._extract_ad(ad_link, month_url)
+            if title:
+                self._append(title, date, ad_url)
+
+            if self._is_max_len:
+                return
 
     @property
     def _is_max_len(self):
         return self.n_lines_max and len(self.titles) == self.n_lines_max
 
     def _append(self, title, date, url):
-        """Append found ad information to output lists that will build
+        """Append found job ad information to output lists that will build
         dataframe.
         """
 
@@ -66,40 +75,37 @@ class Database:
     @property
     def df(self):
         return pd.DataFrame(
-            list(zip(self.titles, self.dates, self.urls)),
-            columns=["title", "date", "url"],
+            {"title": self.titles, "date": self.dates, "url": self.urls}
         )
 
     def to_csv(self, path):
         self.df.to_csv(path)
 
+    def _extract_ad(self, ad_link, month_url):
+        """Get job ad information from its link."""
 
-def extract_ad(ad_link, month_url):
-    """Get job ad information from job ad link."""
+        title, date, ad_url = None, None, None
 
-    title, date, ad_url = None, None, None
+        ad_href = ad_link.get("href")
 
-    ad_href = ad_link.get("href")
+        if ad_href and "msg" in ad_href:
 
-    if ad_href and "msg" in ad_href:
+            ad_url = month_url.replace("date.html", ad_href)
+            ad_soup = soup_from_url(ad_url)
 
-        ad_url = month_url.replace("date.html", ad_href)
+            title = ad_soup.find("h1").get_text()
 
-        ad_soup = bs(get(ad_url, verify=False).text, "lxml")
+            split_str = "[Met-jobs] "
+            if split_str in title:
+                title = title.split(split_str)[1]
 
-        title = ad_soup.find("h1").get_text()
+            dates = [
+                a.get_text()
+                for a in ad_soup.select("tr td")
+                if a.get_text().count(":") == 2
+            ]
 
-        split_str = "[Met-jobs] "
-        if split_str in title:
-            title = title.split(split_str)[1]
+            if dates:
+                date = dparser.parse(dates[0])
 
-        dates = [
-            a.get_text()
-            for a in ad_soup.select("tr td")
-            if a.get_text().count(":") == 2
-        ]
-
-        if dates:
-            date = dparser.parse(dates[0])
-
-    return title, date, ad_url
+        return title, date, ad_url
