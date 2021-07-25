@@ -4,7 +4,9 @@ import argparse
 
 from met_jobs.database import Database
 
-parser = argparse.ArgumentParser(description="Search in the met-jobs ads.")
+parser = argparse.ArgumentParser(
+    description="Scrape the met-jobs website and create a database of job ads."
+)
 parser.add_argument(
     "path_out", metavar="PATH_OUT", type=str, help="The output path for the database"
 )
