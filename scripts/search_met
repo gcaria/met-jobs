@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Script to query the database."""
 import argparse
 import math
 import re
@@ -16,12 +17,8 @@ parser.add_argument(
 parser.add_argument(
     "-n", "--n_results", default=10, type=int, help="Number of results displayed"
 )
-parser.add_argument(
-    "-s", "--start", type=str, help="Start date for search (format : DD-MM-YYYY)"
-)
-parser.add_argument(
-    "-e", "--end", type=str, help="End date for search (format : DD-MM-YYYY)"
-)
+parser.add_argument("-s", "--start", type=str, help="Start date for search")
+parser.add_argument("-e", "--end", type=str, help="End date for search")
 parser.add_argument(
     "--by",
     type=str,
