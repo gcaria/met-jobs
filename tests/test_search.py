@@ -1,3 +1,6 @@
+import os
+import subprocess
+
 import numpy as np
 import pytest
 
@@ -48,3 +51,36 @@ def test_by_argument():
     search = Search("foo", by="oldest")
     assert search.df["date"].is_monotonic_increasing
     assert search.df["title"].str.contains("foo", case=False).all()
+
+
+@pytest.fixture
+def rootdir():
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+def test_script_execution(rootdir):
+    path_db = os.path.join(rootdir, "test_create.csv")
+    process = subprocess.run(["search_met", "foo", "-d", path_db], capture_output=True)
+    expected = (
+        "1)   Postdoctoral fellow position at Hanyang University - updates             "
+        "   - 31-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00069.html\n\n\n2)"  # noqa: E501
+        "   Postdoctoral Fellow in Atmosphere, Oceanography or Climate science - Rom..."
+        " - 14-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00025.html\n\n\n3)"  # noqa: E501
+        "   DTN- Meteorologist vacancy                                                 "
+        " - 11-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00017.html\n\n\n4)"  # noqa: E501
+        "   Assistant Professor climate change, flood/drought-risk, data-driven methods"
+        " - 12-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00020.html\n\n\n5)"  # noqa: E501
+        "   Post-doc position on Forecasting of Water Variables                        "
+        " - 12-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00021.html\n\n\n6)"  # noqa: E501
+        "   DWD: Mitarbeiter/in (m/w/d) im Sachgebiet Entwicklung meteorologischer D..."
+        " - 13-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00022.html\n\n\n7)"  # noqa: E501
+        "   Ph.D. student position on machine learning in meteorology at the Univers..."
+        " - 14-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00023.html\n\n\n8)"  # noqa: E501
+        "   Technisch-wissenschaftliche/r MA/in: Wissenschaftliches Rechnen/HPC        "
+        " - 14-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00024.html\n\n\n9)"  # noqa: E501
+        "   FW: RP3                                                                    "
+        " - 14-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00029.html\n\n\n10)"  # noqa: E501
+        '  Ph-D thesis in France "Modelling studeies of the chlorine atmospheric ch...'
+        " - 11-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00019.html\n"  # noqa: E501
+    )
+    assert expected == process.stdout.decode()
