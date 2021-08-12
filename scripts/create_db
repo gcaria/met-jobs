@@ -145,4 +145,5 @@ if __name__ == "__main__":
 
     with open(args.path_out, "w") as csvfile:
         csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["title", "date", "url"])
         csv_writer.writerows(job_infos)

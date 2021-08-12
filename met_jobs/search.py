@@ -52,7 +52,7 @@ class Search:
     def df(self):
 
         df = pd.read_csv(self.path_db, parse_dates=["date"], infer_datetime_format=True)
-        # For non-standard datetime parsing, we use pd.to_datetime after pd.read_csv
+        # For non-standard datetime parsing, must use pd.to_datetime after pd.read_csv
         df["date"] = pd.to_datetime(df["date"], utc=True)
         # Remove information about timezone, since we do not need
         # to know time with this level of precision
