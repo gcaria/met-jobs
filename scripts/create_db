@@ -114,8 +114,8 @@ if __name__ == "__main__":
         description="Scrape the met-jobs website and create a database of job ads."
     )
     parser.add_argument(
-        "path_out",
-        metavar="PATH_OUT",
+        "path_csv",
+        metavar="PATH_CSV",
         type=str,
         help="The output path for the database csv file",
     )
@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
     job_infos = process_map(run_on_ad_url, ad_urls, **kwargs)
 
-    with open(args.path_out, "w") as csvfile:
+    with open(args.path_csv, "w") as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(["title", "date", "url"])
         csv_writer.writerows(job_infos)

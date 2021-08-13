@@ -26,7 +26,7 @@ def format_title(index, title_str):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Search in the met-jobs ads.")
+    parser = argparse.ArgumentParser(description="Search in the met-jobs ads database.")
     parser.add_argument(
         "query", metavar="QUERY", type=str, help="String for search query"
     )
