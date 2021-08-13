@@ -6,33 +6,6 @@ import re
 
 from met_jobs.search import Search
 
-parser = argparse.ArgumentParser(description="Search in the met-jobs ads.")
-parser.add_argument("query", metavar="QUERY", type=str, help="String for search query")
-parser.add_argument(
-    "-d",
-    "--database",
-    type=str,
-    help="Path of database used for search query (default is built-in database)",
-)
-parser.add_argument(
-    "-n", "--n_results", default=10, type=int, help="Number of results displayed"
-)
-parser.add_argument("-s", "--start", type=str, help="Start date for search")
-parser.add_argument("-e", "--end", type=str, help="End date for search")
-parser.add_argument(
-    "--by",
-    type=str,
-    default="best",
-    choices=["best", "newest", "oldest"],
-    help="Criterium for order of results",
-)
-args = parser.parse_args()
-
-
-search = Search(
-    args.query, args.database, args.start, args.end, args.by, args.n_results
-)
-
 
 def format_title(index, title_str):
     """Edit title string to have a uniform format for display."""
@@ -52,14 +25,42 @@ def format_title(index, title_str):
     return sep + title_str
 
 
-for i_count, idx_df in enumerate(search.first_results):
-    if i_count:
-        print("\n")
-    title = search.df.loc[idx_df, "title"]
-    date = search.df.loc[idx_df, "date"].strftime("%d-%m-%Y")
-    url = search.df.loc[idx_df, "url"]
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Search in the met-jobs ads.")
+    parser.add_argument(
+        "query", metavar="QUERY", type=str, help="String for search query"
+    )
+    parser.add_argument(
+        "-d",
+        "--database",
+        type=str,
+        help="Path of database used for search query (default is built-in database)",
+    )
+    parser.add_argument(
+        "-n", "--n_results", default=10, type=int, help="Number of results displayed"
+    )
+    parser.add_argument("-s", "--start", type=str, help="Start date for search")
+    parser.add_argument("-e", "--end", type=str, help="End date for search")
+    parser.add_argument(
+        "--by",
+        type=str,
+        default="best",
+        choices=["best", "newest", "oldest"],
+        help="Criterium for order of results",
+    )
+    args = parser.parse_args()
 
-    title_fmt = format_title(i_count + 1, title)
+    search = Search(
+        args.query, args.database, args.start, args.end, args.by, args.n_results
+    )
+    for i_count, idx_df in enumerate(search.first_results):
+        if i_count:
+            print("\n")
+        title = search.df.loc[idx_df, "title"]
+        date = search.df.loc[idx_df, "date"].strftime("%d-%m-%Y")
+        url = search.df.loc[idx_df, "url"]
 
-    print(f"{i_count+1}){title_fmt} - {date}")
-    print(f"{url}")
+        title_fmt = format_title(i_count + 1, title)
+
+        print(f"{i_count+1}){title_fmt} - {date}")
+        print(f"{url}")
