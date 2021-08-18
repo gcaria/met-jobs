@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Script to query the database."""
+"""Script to query the database and display the results."""
 import argparse
 import math
 import re
@@ -56,11 +56,9 @@ if __name__ == "__main__":
     for i_count, idx_df in enumerate(search.first_results):
         if i_count:
             print("\n")
-        title = search.df.loc[idx_df, "title"]
-        date = search.df.loc[idx_df, "date"].strftime("%d-%m-%Y")
-        url = search.df.loc[idx_df, "url"]
+        title, date, url = search.df.loc[idx_df, ["title", "date", "url"]]
 
         title_fmt = format_title(i_count + 1, title)
 
-        print(f"{i_count+1}){title_fmt} - {date}")
+        print(f"{i_count+1}){title_fmt} - {date.strftime('%d-%m-%Y')}")
         print(f"{url}")
