@@ -83,4 +83,7 @@ def test_script_execution(rootdir):
         '  Ph-D thesis in France "Modelling studeies of the chlorine atmospheric ch...'
         " - 11-05-2020\nhttps://www.lists.rdg.ac.uk/archives/met-jobs/2020-05/msg00019.html\n"  # noqa: E501
     )
-    assert expected == process.stdout.decode()
+    actual = process.stdout.decode()
+    result = actual == expected
+    print("\n" + actual)
+    assert result
