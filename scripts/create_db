@@ -132,6 +132,7 @@ if __name__ == "__main__":
 
     month_urls = filter_month_urls(get_month_urls(), args.start, args.end)
 
+    print("Retrieve URLs of job ads...")
     ad_urls = Pool().map(run_on_month_url, month_urls)
     ad_urls = [url for url_list in ad_urls for url in url_list]
 
@@ -141,6 +142,7 @@ if __name__ == "__main__":
         # (most time spent dispatching items to workers)
         kwargs = {"chunksize": 2}
 
+    print("Extract information of job ads and write database to file...")
     job_infos = process_map(run_on_ad_url, ad_urls, **kwargs)
 
     with open(args.path_csv, "w") as csvfile:

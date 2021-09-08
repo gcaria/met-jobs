@@ -1,6 +1,12 @@
 # met-jobs
-Searches through the jobs advertised from January 2011 until July 2021 (around 12,000 entries) via the [Met-jobs mailing list](https://www.lists.rdg.ac.uk/mailman/listinfo/met-jobs) and
+met-jobs lets you search through the jobs advertised from January 2011 until July 2021 (around 12,000 entries) via the [Met-jobs mailing list](https://www.lists.rdg.ac.uk/mailman/listinfo/met-jobs) and
 display the most appropriate results.
+
+It also provides a tool to quickly scrape
+the Met-jobs website and produce a database that includes the latest job ads,
+which then can be used as input for the search engine.
+
+----
 
 ## Installation
 Simply pip it:
@@ -8,7 +14,15 @@ Simply pip it:
 pip install met-jobs
 ```
 
+If you want to build a new database of job ads, it is necessary to install
+additional dependencies that deal with the web scraping part. You can do so, by using:
+```
+pip install met-jobs[scrape]
+```
+
 The code has only been tested with Python 3.8.
+
+----
 
 ## Usage
 
@@ -70,7 +84,8 @@ optional arguments:
 ### Scrape the Met-jobs website and create a database of job ads
 
 A fast parallelized tool to scrape the website and retrieve information of the
-job ads is provided. The details of each job ad (title, date, URL) are saved in a csv file.
+job ads is provided. It can be useful to use this tool when you want to create a new database which
+includes the latest job ads (as of now job ads until July 2021 are included in the built-in database).
 
 This is achieved running:
 
