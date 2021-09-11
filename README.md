@@ -1,4 +1,7 @@
 # met-jobs
+![Tests Status](https://github.com/gcaria/met-jobs/actions/workflows/ci.yml/badge.svg)
+[![PyPI Version](https://badge.fury.io/py/met-jobs.svg)](https://badge.fury.io/py/met-jobs)
+
 met-jobs lets you search through the jobs advertised from January 2011 until July 2021 (around 12,000 entries) via the [Met-jobs mailing list](https://www.lists.rdg.ac.uk/mailman/listinfo/met-jobs) and
 display the most appropriate results.
 
@@ -20,7 +23,7 @@ additional dependencies that deal with the web scraping part. You can do so, by 
 pip install met-jobs[scrape]
 ```
 
-The code has only been tested with Python 3.8.
+The code has been tested with Python 3.8 and 3.9.
 
 ----
 
